@@ -1,40 +1,46 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Controller {
 
-    private Pillar[] pillars;
+    private ArrayList<Project> projects;
 
     public Controller() {
-
-        pillars = new Pillar[4];
-
+        projects = new ArrayList<>();
     }
 
-    /**
-     * Descripcion: Permite crear y añadir un Project en un Pillar en el sistema
-     * 
-     * @return boolean true si se logra añadir el Prject en el Pillar, false en caso
-     *         contrario
-     */
-    public boolean registerProjectInPillar(int pillarType, String id, String name, String description,boolean status) {
-
-        return false;
+    public boolean isUniqueIdInPillar(int pillarType, String id) {
+        for (Project project : projects) {
+            if (project.getPillarType() == pillarType && project.getId().equals(id)) {
+                return false; // Si ya existe un proyecto con el mismo ID en el mismo pilar, devuelve falso
+            }
+        }
+        return true; // ID único
     }
 
-    /**
-     * Descripcion: Calcula el valor en dinero correspondiente al arrendamiento
-     * mensual de todos los Edificios
-     * pre: El arreglo edificios debe estar inicializado
-     * 
-     * @return String cadena en formato lista con la información de los
-     * Project registrados en el Pillar
-     */
+    public void registerProject(int pillarType, String id, String name, String description, int statusOption) {
+        ProjectStatus status = (statusOption == 1) ? ProjectStatus.ACTIVE : ProjectStatus.INACTIVE;
+        projects.add(new Project(pillarType, id, name, description, status));
+    }
+
     public String queryProjectsByPillar(int pillarType) {
+        StringBuilder result = new StringBuilder("Proyectos en el Pilar " + pillarType + ":\n");
 
-        String query = "";
+        boolean hasProjects = false;
 
-        return query;
+        for (Project project : projects) {
+            if (project.getPillarType() == pillarType) {
+                result.append(project.toString()).append("\n");
+                hasProjects = true;
+            }
+        }
 
+        // Si no se encontraron proyectos, mostrar mensaje específico
+        if (!hasProjects) {
+            return "Aún no se ha registrado ningún proyecto en este Pilar. Registre al menos uno.";
+        }
+
+        return result.toString();
     }
-
 }
